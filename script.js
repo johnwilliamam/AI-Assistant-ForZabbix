@@ -6,32 +6,39 @@ var Gemini = {
         }
         Gemini.params = params;
         if (typeof Gemini.params.api_key !== 'string' || Gemini.params.api_key === '') {
-            throw 'API key for Gemini is required.';
+            // Tradução: "API key for Gemini is required."
+            throw 'A chave de API para o Gemini é obrigatória.';
         }
         Gemini.params.url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
     },
     request: function(data) {
         if (!Gemini.params.api_key) {
-            throw 'API key is missing.';
+            // Tradução: "API key is missing."
+            throw 'A chave de API está faltando.';
         }
         var request = new HttpRequest();
         request.addHeader('Content-Type: application/json');
         
-        // Construir URL con API key
+        // Tradução: "Construir URL con API key"
+        // Construir URL com a chave de API
         var urlWithKey = Gemini.params.url + '?key=' + Gemini.params.api_key;
         
-        Zabbix.log(4, '[ Gemini Webhook ] Sending request: ' + urlWithKey + '\n' + JSON.stringify(data));
+        // Tradução: "Sending request:"
+        Zabbix.log(4, '[ Gemini Webhook ] Enviando requisição: ' + urlWithKey + '\n' + JSON.stringify(data));
         var response = request.post(urlWithKey, JSON.stringify(data));
-        Zabbix.log(4, '[ Gemini Webhook ] Received response with status code ' + request.getStatus() + '\n' + response);
+        // Tradução: "Received response with status code"
+        Zabbix.log(4, '[ Gemini Webhook ] Resposta recebida com código de status ' + request.getStatus() + '\n' + response);
         
         if (request.getStatus() < 200 || request.getStatus() >= 300) {
-            throw 'Gemini API request failed with status code ' + request.getStatus() + '.';
+            // Tradução: "Gemini API request failed with status code"
+            throw 'A requisição da API Gemini falhou com o código de status ' + request.getStatus() + '.';
         }
         
         try {
             response = JSON.parse(response);
         } catch (error) {
-            Zabbix.log(4, '[ Gemini Webhook ] Failed to parse response from Gemini.');
+            // Tradução: "Failed to parse response from Gemini."
+            Zabbix.log(4, '[ Gemini Webhook ] Falha ao analisar a resposta do Gemini.');
             response = null;
         }
         return response;
@@ -46,36 +53,43 @@ try {
     
     Object.keys(params).forEach(function(key) {
         if (required_params.indexOf(key) !== -1 && params[key] === '') {
-            throw 'Parameter "' + key + '" cannot be empty.';
+            // Tradução: 'Parameter "' + key + '" cannot be empty.'
+            throw 'O parâmetro "' + key + '" não pode estar vazio.';
         }
     });
 
-    // Formatear la consulta para Gemini
+    // Tradução: "Formatear la consulta para Gemini"
+    // Formatar a consulta para o Gemini
     data = {
         contents: [{
             parts: [{
-                text: "La alerta: " + params.alert_subject + " ocurrió en Zabbix. " +
-                      "Sugiere posibles causas y soluciones para resolver este problema, no hagas un texto grande, " +
-                      "solamente unas 10 líneas con causas, ideas, comandos para debug y medidas para mitigar futuros incidentes."
+                // Tradução do prompt em Espanhol:
+                text: "O alerta: " + params.alert_subject + " ocorreu no Zabbix. " +
+                      "Sugira possíveis causas e soluções para resolver este problema, não faça um texto grande, " +
+                      "apenas umas 10 linhas com causas, ideias, comandos de debug e medidas para mitigar futuros incidentes."
             }]
         }]
     };
 
-    // Configurar la API de Gemini
+    // Tradução: "Configurar la API de Gemini"
+    // Configurar a API do Gemini
     Gemini.setParams({ api_key: params.api_key });
     
-    // Hacer la solicitud a Gemini
+    // Tradução: "Hacer la solicitud a Gemini"
+    // Fazer a solicitação ao Gemini
     var response = Gemini.request(data);
     
     if (response && response.candidates && response.candidates.length > 0) {
         result = response.candidates[0].content.parts[0].text.trim();
     } else {
-        throw 'No response from Gemini.';
+        // Tradução: "No response from Gemini."
+        throw 'Nenhuma resposta do Gemini.';
     }
     
     return result;
     
 } catch (error) {
     Zabbix.log(3, '[ Gemini Webhook ] ERROR: ' + error);
-    throw 'Sending failed: ' + error;
-} 
+    // Tradução: "Sending failed:"
+    throw 'O envio falhou: ' + error;
+}

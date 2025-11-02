@@ -12,14 +12,14 @@ class WidgetInsightsJs extends CWidget {
             this._body.innerHTML = `
             <div class="options" style="text-align: center; margin-bottom: 20px;">
                 <select id="analysisType">
-                    <option value="Resumen">Resumen</option>
+                    <option value="Resumo">Resumo</option>
                     <option value="Perspectivas">Perspectivas</option>
-                    <option value="Diagnostico">Diagnostico</option>
-                    <option value="Comparacion">Comparacion</option>
-                    <option value="Pronostico">Pronóstico</option>
-                    <option value="¿Que harias tu?">¿Que harias tu?</option>
+                    <option value="Diagnostico">Diagnóstico</option>
+                    <option value="Comparacao">Comparação</option>
+                    <option value="Previsao">Previsão</option>
+                    <option value="Oquevocefaria">O que você faria?</option>
                 </select>
-                <button id="analyseBtn">Analizar</button>
+                <button id="analyseBtn">Analisar</button>
             </div>
             <div id="dashboard-container" class="dashboard-grid" style="height: 300px;">
                 <div id="outputContainer" style="margin-top: 20px; border: 1px solid #ccc; padding: 10px; border-radius: 5px; background-color: #f9f9f9; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);"></div>
@@ -33,7 +33,7 @@ class WidgetInsightsJs extends CWidget {
             this._loadHtml2Canvas().then(() => {
                 this._analyseBtn.addEventListener('click', this._onAnalyseBtnClick.bind(this));
             }).catch(error => {
-                console.error('Failed to load html2canvas:', error);
+                console.error('Falha ao carregar html2canvas:', error);
             });
         }
     }
@@ -54,34 +54,33 @@ class WidgetInsightsJs extends CWidget {
 
     _getPromptForAnalysisType(analysisType) {
         const prompts = {
-            'Resumen': "Esta imagen muestra un tablero de Zabbix. Concéntrese únicamente en los paneles dentro del tablero. NO INCLUYA el panel de AI Analyser en su análisis. Proporcione un breve resumen de lo que el tablero está mostrando, enfocándose en los puntos más críticos y relevantes. Los colores más claros en el mapa de calor indican un uso más alto, los colores más oscuros indican un uso más bajo. Siempre comience con 'Este tablero muestra...' y asegúrese de que el resumen capture las ideas clave sin entrar en demasiados detalles",
-            'Perspectivas': "Esta imagen muestra un panel de control de Zabbix. Concéntrese únicamente en los paneles dentro del panel de control. NO INCLUYA el panel de AI Analyser en su análisis. Explique qué está mostrando la información y comparta cualquier insight que pueda extraer. Los colores más claros en el mapa de calor indican un uso más alto, los colores más oscuros indican un uso más bajo. Siempre comience con 'Este panel de control muestra...' y proporcione información detallada sobre la información presentada, destacando cualquier tendencia, patrón o anomalía que observe.",
-            'Diagnostico': "Esta imagen muestra un panel de control de Zabbix. Centrémonos únicamente en los paneles dentro del panel de control. NO INCLUYA el panel de AI Analyser en su análisis. Analice los datos para detectar cualquier problema o preocupación potencial, destacando las correlaciones y cualquier punto crítico de preocupación. Los colores más claros en el mapa de calor indican un uso más alto, los colores más oscuros indican un uso más bajo. Siempre comience con 'Este panel de control muestra...' y proporcione un diagnóstico detallado de cualquier posible problema o ineficiencia indicada por los datos.",
-            'Comparacion': "Esta imagen muestra un panel de control de Zabbix. Centrémonos únicamente en los paneles dentro del panel de control. NO INCLUYA el panel de AI Analyser en su análisis. Compare los datos de los diferentes paneles para destacar cualquier correlación, discrepancia o diferencia significativa. Los colores más claros en el mapa de calor indican un uso más alto, los colores más oscuros indican un uso más bajo. Siempre comience con 'Este panel de control muestra...' y proporcione un análisis comparativo, explicando cómo los datos de los diferentes paneles se relacionan entre sí.",
-            'Pronostico': "Esta imagen muestra un panel de control de Zabbix. Centrémonos únicamente en los paneles dentro del panel de control. NO INCLUYA el panel de AI Analyser en su análisis. Basándose en los datos actuales, proporcione una previsión de las tendencias y patrones de uso futuros. Los colores más claros en el mapa de calor indican un uso más alto, los colores más oscuros indican un uso más bajo. Siempre comience con 'Este panel de control muestra...' y ofrezca información sobre cómo podrían verse los datos futuros, explicando la base de sus predicciones.",
-            '¿Que harias tu?': "Esta imagen muestra un dashboard de Zabbix. Enfócate solo en los paneles dentro del dashboard. NO INCLUYAS el panel de AI Analyser en tu análisis. Basado en los datos mostrados, sugiere acciones proactivas que un administrador de sistemas debería tomar para prevenir problemas y optimizar el rendimiento. Los colores más claros en el mapa de calor indican un uso más alto, y los colores más oscuros, un uso más bajo. Comienza con 'Basado en este dashboard, las acciones proactivas recomendadas son:' y proporciona al menos 5 acciones específicas, explicando el razonamiento detrás de cada una y su impacto esperado.Luego, imagina que eres un consultor de optimización de sistemas. Desarrolla una estrategia de mejora continua a largo plazo basada en los datos mostrados, estableciendo un plan de 3 a 6 meses. Comienza con 'Para mejorar continuamente el sistema mostrado en este dashboard, recomiendo la siguiente estrategia:' y detalla objetivos específicos, métricas a seguir, y los cambios sugeridos en la infraestructura o procesos. Explica cómo cada parte de la estrategia se relaciona con los datos observados en el dashboard y cómo estas recomendaciones podrían mejorar el rendimiento en el futuro."
-
+            'Resumo': "Esta imagem mostra um painel do Zabbix. Concentre-se apenas nos painéis dentro do dashboard. NÃO INCLUA o painel do AI Analyser em sua análise. Forneça um breve resumo do que o painel está mostrando, focando nos pontos mais críticos e relevantes. As cores mais claras no mapa de calor indicam uso mais alto, e as mais escuras, uso mais baixo. Sempre comece com 'Este painel mostra...' e garanta que o resumo capture as ideias principais sem entrar em muitos detalhes.",
+            'Perspectivas': "Esta imagem mostra um painel de controle do Zabbix. Concentre-se apenas nos painéis dentro do dashboard. NÃO INCLUA o painel do AI Analyser em sua análise. Explique o que as informações mostram e compartilhe quaisquer percepções (insights) que possam ser extraídas. As cores mais claras no mapa de calor indicam uso mais alto, e as mais escuras, uso mais baixo. Sempre comece com 'Este painel de controle mostra...' e forneça detalhes sobre as informações apresentadas, destacando tendências, padrões ou anomalias observadas.",
+            'Diagnostico': "Esta imagem mostra um painel de controle do Zabbix. Foque apenas nos painéis dentro do dashboard. NÃO INCLUA o painel do AI Analyser em sua análise. Analise os dados para identificar possíveis problemas ou preocupações, destacando correlações e pontos críticos de atenção. As cores mais claras no mapa de calor indicam uso mais alto, e as mais escuras, uso mais baixo. Sempre comece com 'Este painel de controle mostra...' e forneça um diagnóstico detalhado de qualquer possível falha ou ineficiência indicada pelos dados.",
+            'Comparacao': "Esta imagem mostra um painel de controle do Zabbix. Foque apenas nos painéis dentro do dashboard. NÃO INCLUA o painel do AI Analyser em sua análise. Compare os dados dos diferentes painéis para destacar correlações, discrepâncias ou diferenças significativas. As cores mais claras no mapa de calor indicam uso mais alto, e as mais escuras, uso mais baixo. Sempre comece com 'Este painel de controle mostra...' e ofereça uma análise comparativa explicando como os dados se relacionam entre si.",
+            'Previsao': "Esta imagem mostra um painel de controle do Zabbix. Foque apenas nos painéis dentro do dashboard. NÃO INCLUA o painel do AI Analyser em sua análise. Com base nos dados atuais, forneça uma previsão das tendências e padrões futuros de uso. As cores mais claras no mapa de calor indicam uso mais alto, e as mais escuras, uso mais baixo. Sempre comece com 'Este painel de controle mostra...' e ofereça uma visão de como os dados podem evoluir, explicando a base das suas previsões.",
+            'Oquevocefaria': "Esta imagem mostra um painel do Zabbix. Foque apenas nos painéis dentro do dashboard. NÃO INCLUA o painel do AI Analyser em sua análise. Com base nos dados exibidos, sugira ações proativas que um administrador de sistemas deve tomar para prevenir problemas e otimizar o desempenho. As cores mais claras no mapa de calor indicam uso mais alto, e as mais escuras, uso mais baixo. Comece com 'Com base neste painel, as ações proativas recomendadas são:' e forneça pelo menos 5 ações específicas, explicando o motivo e o impacto esperado de cada uma. Em seguida, imagine que você é um consultor de otimização de sistemas. Desenvolva uma estratégia de melhoria contínua de longo prazo com base nos dados exibidos, estabelecendo um plano de 3 a 6 meses. Comece com 'Para melhorar continuamente o sistema mostrado neste painel, recomendo a seguinte estratégia:' e detalhe objetivos específicos, métricas a acompanhar e mudanças sugeridas na infraestrutura ou nos processos. Explique como cada parte da estratégia se relaciona com os dados observados e como essas recomendações podem melhorar o desempenho futuro."
         };
         return prompts[analysisType];
     }
 
     async _onAnalyseBtnClick() {
-        console.log("Analyse button clicked...");
+        console.log("Botão de análise clicado...");
         const analysisType = this._analysisType.value;
-        console.log("Selected analysis type:", analysisType);
-        this._outputContainer.innerHTML = 'Analizando..';
+        console.log("Tipo de análise selecionado:", analysisType);
+        this._outputContainer.innerHTML = 'Analisando...';
 
         try {
-            console.log("Capturing the dashboard...");
+            console.log("Capturando o painel...");
             const canvas = await html2canvas(document.querySelector('main'));
-            console.log("Canvas created:", canvas);
+            console.log("Canvas criado:", canvas);
             const dataUrl = canvas.toDataURL('image/png');
-            console.log("Data URL created");
+            console.log("URL de imagem criada");
 
             const base64Image = dataUrl.split(',')[1];
             const prompt = this._getPromptForAnalysisType(analysisType);
 
-            console.log("Sending captured image to Gemini API...");
+            console.log("Enviando imagem capturada para a API Gemini...");
             const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=GEMINI_API_KEY', {
                 method: 'POST',
                 headers: {
@@ -103,19 +102,18 @@ class WidgetInsightsJs extends CWidget {
             });
 
             const responseData = await response.json();
-            console.log("Response from Gemini:", responseData);
+            console.log("Resposta da Gemini:", responseData);
 
-            // Ajustado para manejar la estructura de respuesta de Gemini
             const responseContent = responseData.candidates[0].content.parts[0].text;
             this._outputContainer.innerHTML = `<div style="border: 1px solid #ccc; padding: 10px; border-radius: 5px; background-color: #f9f9f9;">${responseContent}</div>`;
-            console.log("Analysis result:", responseContent);
+            console.log("Resultado da análise:", responseContent);
 
         } catch (error) {
-            console.error('Error during analysis:', error);
-            this._outputContainer.innerHTML = '<div style="border: 1px solid #f00; padding: 10px; border-radius: 5px; background-color: #fee;">An error occurred during analysis.</div>';
+            console.error('Erro durante a análise:', error);
+            this._outputContainer.innerHTML = '<div style="border: 1px solid #f00; padding: 10px; border-radius: 5px; background-color: #fee;">Ocorreu um erro durante a análise.</div>';
         }
     }
 }
 
-// Register the widget
+// Registrar o widget
 addWidgetClass(WidgetInsightsJs);
